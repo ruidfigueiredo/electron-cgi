@@ -51,7 +51,7 @@ And in the .Net Console Application:
 
 Electron CGI establishes a "connection" with an external process. That external process must be configured to accept that connection. In the example above that's what the `Listen` method does.  
 
-In Node ew can "send" requests (for example "greeting" with "John" as a parameter) and receive a response from the other process.
+In Node we can "send" requests (for example "greeting" with "John" as a parameter) and receive a response from the other process.
 
 The way this communication channel is established is by using the connected process' stdin and stdout streams. This approach does not rely on staring up a web server and because of that introduces very little overhead in terms of the requests' round-trip time.
 
