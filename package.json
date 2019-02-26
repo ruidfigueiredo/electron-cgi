@@ -1,0 +1,18 @@
+{
+  "name": "electron-cgi",
+  "version": "0.0.1",
+  "description": "Library to connect node applications to other apps using the stdin/stdout much like what was done in the 90s with CGI (common gateway interface)",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/ruidfigueiredo/electron-cgi"
+  },
+  "scripts": {
+    "test": "jasmine"
+  },
+  "author": "Rui Figueiredo <rui@blinkingcaret.com> (https://www.blinkingcaret.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@types/jasmine": "^3.3.9",
+    "uuid": "^3.3.2"
+  }
+}
