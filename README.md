@@ -1,6 +1,6 @@
 # Electron CGI
 
-Electron CGI is a NodeJs library that makes interacting with executables from other languages easy.
+Electron CGI is a NodeJs library (npm package: [electron-cgi](https://www.npmjs.com/package/electron-cgi)) that makes interacting with executables from other languages easy.
 
 Currently there's support for .Net through the [ElectronCgi.DotNet](https://www.nuget.org/packages/ElectronCgi.DotNet/) Nuget package.
 
