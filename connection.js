@@ -3,6 +3,8 @@ const TabSeparatedInputStreamParser = require('./tab-separated-input-stream-pars
 
 function Connection(outStream, inStream) {
     const responseHandlersQueue = [];
+    const requestHandlersQueue = [];
+
     const inputStreamParser = new TabSeparatedInputStreamParser();
 
     inStream.setEncoding('utf8');
@@ -23,8 +25,21 @@ function Connection(outStream, inStream) {
         }
     });
 
+    inputStreamParser.onRequest(request => {
+        const requestType = request.type;
+        const requestHandlerIndex = requestHandlersQueue.map(rh => rh.type).indexOf(requestType);
+        if (requestHandlerIndex !== -1) {
+            const requestHandler = requestHandlersQueue[requestHandlerIndex].onRequest;
+            const resultArgs = requestHandler(request.args)
+            outStream.write(`{"type": "RESPONSE", "response": ${JSON.stringify({
+                id: request.id,
+                result: JSON.stringify(resultArgs || null)
+            })}}\t`);
+        }
+    });
+
     const send = (request, onResponse) => {
-        outStream.write(`${JSON.stringify(request)}\t`);
+        outStream.write(`{"type": "REQUEST", "request": ${JSON.stringify(request)}}\t`);
         if (onResponse) {
             responseHandlersQueue.push({
                 id: request.id,
@@ -38,6 +53,10 @@ function Connection(outStream, inStream) {
     this.send = (type, args = {}, onResponse = null) => {
         send(new Request(type, args), onResponse);
     };
+
+    this.on = (type, onRequest) => {
+        requestHandlersQueue.push({ type, onRequest })
+    }
 
     this.close = () => {
         outStream.end();

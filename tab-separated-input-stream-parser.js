@@ -1,26 +1,34 @@
 const { EventEmitter } = require('events');
 
 function TabSeparatedInputStreamParser() {
-    const responseEmitter = new EventEmitter();
+    const messageEmitter = new EventEmitter();
     let streamInput = '';
 
-    this.addPartial = streamContent => {
+    this.addPartial = streamContent => {        
         streamInput += streamContent;
         while (streamInput.indexOf('\t') !== -1) {
-            const responseStr = streamInput.substring(0, streamInput.indexOf('\t'));
+            const messageStr = streamInput.substring(0, streamInput.indexOf('\t'));
             streamInput = streamInput.substring(streamInput.indexOf('\t') + 1);
-            let response = null;
-            try{            
-                response = JSON.parse(responseStr);
-            } catch (e){
-                throw new Error(`Invalid incoming JSON: ${responseStr}`);
+            let message = null;
+            try {
+                message = JSON.parse(messageStr);
+            } catch (e) {
+                throw new Error(`Invalid incoming JSON: ${messageStr}`);
             }
-            responseEmitter.emit('response', response);
+            if (message.type === 'RESPONSE') {
+                messageEmitter.emit('response', message.response);
+            }else if (message.type === 'REQUEST') {
+                messageEmitter.emit('request', message.request);
+            }
         }
     };
 
     this.onResponse = handleResponseCallback => {
-        responseEmitter.on('response', handleResponseCallback);
+        messageEmitter.on('response', handleResponseCallback);
+    };
+
+    this.onRequest = handleRequestCallback => {
+        messageEmitter.on('request', handleRequestCallback);
     };
 }
 
