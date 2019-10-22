@@ -1,6 +1,7 @@
 const Request = require('./request');
 const TabSeparatedInputStreamParser = require('./tab-separated-input-stream-parser');
 
+/** @param {import('stream').Writable} outStream */
 function Connection(outStream, inStream) {
     const responseHandlersQueue = [];
     const requestHandlersQueue = [];
@@ -31,14 +32,20 @@ function Connection(outStream, inStream) {
         if (requestHandlerIndex !== -1) {
             const requestHandler = requestHandlersQueue[requestHandlerIndex].onRequest;
             const resultArgs = requestHandler(request.args)
-            outStream.write(`{"type": "RESPONSE", "response": ${JSON.stringify({
-                id: request.id,
-                result: JSON.stringify(resultArgs || null)
-            })}}\t`);
+            sendResponse(request.id, resultArgs);
         }
     });
 
-    const send = (request, onResponse) => {
+    const sendResponse = (requestId, resultArgs) => {        
+        if (!outStream.writable) return; //stream was closed    
+        outStream.write(`{"type": "RESPONSE", "response": ${JSON.stringify({
+            id: requestId,
+            result: JSON.stringify(resultArgs || null)
+        })}}\t`);
+    }
+
+    const sendRequest = (request, onResponse) => {        
+        if (!outStream.writable) return;
         outStream.write(`{"type": "REQUEST", "request": ${JSON.stringify(request)}}\t`);
         if (onResponse) {
             responseHandlersQueue.push({
@@ -51,7 +58,7 @@ function Connection(outStream, inStream) {
     this.onDisconnect = null;
 
     this.send = (type, args = {}, onResponse = null) => {
-        send(new Request(type, args), onResponse);
+        sendRequest(new Request(type, args), onResponse);
     };
 
     this.on = (type, onRequest) => {

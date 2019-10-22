@@ -13,10 +13,11 @@
   "author": "Rui Figueiredo <rui@blinkingcaret.com> (https://www.blinkingcaret.com)",
   "license": "MIT",
   "dependencies": {
-    "@types/jasmine": "^3.3.9",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@types/jasmine": "^3.3.9",
+    "@types/node": "^12.11.5",
     "jasmine": "^3.4.0"
   }
 }
