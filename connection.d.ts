@@ -1,4 +1,7 @@
-export class Connection {
+import { Writable, Readable } from "stream";
+
+export = class Connection {    
+    constructor(executabeStdin: Writable, executabeStdout: Readable);
     /**
      * Sends a request and arguments to the connected process
      * @param type The request type
