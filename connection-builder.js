@@ -22,6 +22,11 @@ function ConnectionBuilder() {
         executable.on('exit', (code) => {
             console.log(`Connection to ${spawnArguments.command} was terminated (code: ${code})`)
         });
+        executable.stderr.on('data', data => {
+            process.stdout.write('\x1b[7m'); //invert terminal colors
+            process.stdout.write(data);
+            process.stdout.write('\x1b[0m'); //reset colors
+        });
         return new Connection(executable.stdin, executable.stdout);
     };
 }
