@@ -37,7 +37,7 @@ describe('Tab separated input stream parser', () => {
             let result = null;
             this.parser.onResponse(response => { result = response; });
 
-            this.parser.addPartial('{"id": 42}\t');
+            this.parser.addPartial('{"type": "RESPONSE", "response": {"id": 42}}\t');
 
             expect(result).toEqual({id: 42});
         });
@@ -50,7 +50,7 @@ describe('Tab separated input stream parser', () => {
             let result = [];
             this.parser.onResponse(response => { result.push(response); });
 
-            this.parser.addPartial('{"id": 42}\t{"id": 24}\t');
+            this.parser.addPartial('{"type": "RESPONSE", "response": {"id": 42}}\t{"type": "RESPONSE", "response":{"id": 24}}\t');
 
             expect(result.length).toBe(2);
             expect(result[0]).toEqual({id: 42});
@@ -61,13 +61,16 @@ describe('Tab separated input stream parser', () => {
             let result = [];
             this.parser.onResponse(response => { result.push(response); });
 
-            this.parser.addPartial('{"id": 42}');
-            this.parser.addPartial('\t');
-            this.parser.addPartial('{"id": 24}\t');
+            this.parser.addPartial('{"type": "RESPONSE", "response": {"id": 42}');
+            this.parser.addPartial('}\t{"type": "RESPONSE", "response": ');
+            this.parser.addPartial('{"id": 24}}\t');
 
             expect(result.length).toBe(2);
             expect(result[0]).toEqual({id: 42});
             expect(result[1]).toEqual({id: 24});
         });         
+
+
+        //TODO: (RF) add tests for requests
     });
 });
