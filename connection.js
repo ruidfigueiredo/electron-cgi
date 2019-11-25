@@ -1,8 +1,11 @@
 const Request = require('./request');
 const TabSeparatedInputStreamParser = require('./tab-separated-input-stream-parser');
 
+/** @param {import('stream').Writable} outStream */
 function Connection(outStream, inStream) {
     const responseHandlersQueue = [];
+    const requestHandlersQueue = [];
+
     const inputStreamParser = new TabSeparatedInputStreamParser();
 
     inStream.setEncoding('utf8');
@@ -23,8 +26,27 @@ function Connection(outStream, inStream) {
         }
     });
 
-    const send = (request, onResponse) => {
-        outStream.write(`${JSON.stringify(request)}\t`);
+    inputStreamParser.onRequest(request => {
+        const requestType = request.type;
+        const requestHandlerIndex = requestHandlersQueue.map(rh => rh.type).indexOf(requestType);
+        if (requestHandlerIndex !== -1) {
+            const requestHandler = requestHandlersQueue[requestHandlerIndex].onRequest;
+            const resultArgs = requestHandler(request.args)
+            sendResponse(request.id, resultArgs);
+        }
+    });
+
+    const sendResponse = (requestId, resultArgs) => {        
+        if (!outStream.writable) return; //stream was closed    
+        outStream.write(`{"type": "RESPONSE", "response": ${JSON.stringify({
+            id: requestId,
+            result: JSON.stringify(resultArgs || null)
+        })}}\t`);
+    }
+
+    const sendRequest = (request, onResponse) => {        
+        if (!outStream.writable) return;
+        outStream.write(`{"type": "REQUEST", "request": ${JSON.stringify(request)}}\t`);
         if (onResponse) {
             responseHandlersQueue.push({
                 id: request.id,
@@ -36,8 +58,12 @@ function Connection(outStream, inStream) {
     this.onDisconnect = null;
 
     this.send = (type, args = {}, onResponse = null) => {
-        send(new Request(type, args), onResponse);
+        sendRequest(new Request(type, args), onResponse);
     };
+
+    this.on = (type, onRequest) => {
+        requestHandlersQueue.push({ type, onRequest })
+    }
 
     this.close = () => {
         outStream.end();

@@ -1,5 +1,33 @@
 # Electron CGI
 
+## Update version 0.0.5
+
+- Duplex: ability to send requests from both .Net and Node.js
+
+## Update version 0.0.3 and 0.0.4
+
+- (.Net) Ability to serve request concurrently (uses System.Threading.Tasks.DataFlow) 
+- Intellisense for electron-cgi
+- .Net stderr stream is displayed in node's console (Console.Error.WriteLine in .Net is now visible)
+- Fixed logging in ElectronCgi.DotNet
+- Duplex communication (i.e. ability initiate a requests in .Net to Node):
+
+In .Net:
+
+    var posts = await GetNewPosts();
+    connection.Send("new-posts", posts);
+
+Node.js:
+
+    connection.on('new-posts', posts => {
+        console.log('Received posts from Net:');
+        posts.forEach(post => {
+            console.log(post.title);
+        });
+    });
+
+__________________________________
+
 Electron CGI is a NodeJs library (npm package: [electron-cgi](https://www.npmjs.com/package/electron-cgi)) that makes interacting with executables from other languages easy.
 
 Currently there's support for .Net through the [ElectronCgi.DotNet](https://www.nuget.org/packages/ElectronCgi.DotNet/) Nuget package.
