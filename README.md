@@ -1,5 +1,8 @@
 # Electron CGI
 
+## Update version 0.0.5
+
+- Duplex: ability to send requests from both .Net and Node.js
 
 ## Update version 0.0.3 and 0.0.4
 
