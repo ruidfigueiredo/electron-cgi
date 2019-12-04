@@ -1,4 +1,5 @@
-import Connection = require('./connection')
+import { Connection } from "./connection";
+
 export class ConnectionBuilder {
     /**
      * Configures the connection builder with the command and arguments supplied as parameters
@@ -8,7 +9,7 @@ export class ConnectionBuilder {
     connectTo(command: string, ...args: string[]): ConnectionBuilder;
 
     /**
-     * Starts a new process and takes over its stdin and stdout. Returns a Connection object that can be used to communicate with the new process 
+     * Starts a new process and takes over its stdin and stdout. Returns a Connection object that can be used to communicate with the new process
      */
     build(): Connection;
 }
