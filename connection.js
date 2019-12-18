@@ -22,9 +22,16 @@ function Connection(outStream, inStream) {
     inputStreamParser.onResponse(response => {
         const responseIds = responseHandlersQueue.map(r => r.id);
         if (responseIds.indexOf(response.id) !== -1) {
-            responseHandlersQueue.splice(responseIds.indexOf(response.id), 1)[0].onResponse(response.result);
+            responseHandlersQueue.splice(responseIds.indexOf(response.id), 1)[0].onResponse(null, response.result);
         }
     });
+
+    inputStreamParser.onError(errorResponse => {
+        const responseIds = responseHandlersQueue.map(r => r.id);
+        if (responseIds.indexOf(errorResponse.requestId) !== -1) {
+            responseHandlersQueue.splice(responseIds.indexOf(errorResponse.requestId), 1)[0].onResponse(JSON.parse(errorResponse.error));
+        }
+    })
 
     inputStreamParser.onRequest(request => {
         const requestType = request.type;
