@@ -43,7 +43,7 @@ function Connection(outStream, inStream) {
         }
     });
 
-    const sendResponse = (requestId, resultArgs) => {        
+    const sendResponse = (requestId, resultArgs) => {
         if (!outStream.writable) return; //stream was closed    
         outStream.write(`{"type": "RESPONSE", "response": ${JSON.stringify({
             id: requestId,
@@ -51,7 +51,7 @@ function Connection(outStream, inStream) {
         })}}\t`);
     }
 
-    const sendRequest = (request, onResponse) => {        
+    const sendRequest = (request, onResponse) => {
         if (!outStream.writable) return;
         outStream.write(`{"type": "REQUEST", "request": ${JSON.stringify(request)}}\t`);
         if (onResponse) {
@@ -65,7 +65,18 @@ function Connection(outStream, inStream) {
     this.onDisconnect = null;
 
     this.send = (type, args = {}, onResponse = null) => {
-        sendRequest(new Request(type, args), onResponse);
+        if (onResponse === null) {
+            return new Promise((resolve, reject) => {
+                sendRequest(new Request(type, args), (err, result) => {
+                    if (err)
+                        reject(err)
+                    else
+                        resolve(result)
+                });    
+            });
+        } else {
+            sendRequest(new Request(type, args), onResponse);
+        }
     };
 
     this.on = (type, onRequest) => {
