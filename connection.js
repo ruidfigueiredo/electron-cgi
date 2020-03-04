@@ -35,12 +35,11 @@ function Connection(outStream, inStream) {
 
     inputStreamParser.onRequest(request => {
         const requestType = request.type;
-        const requestHandlerIndex = requestHandlersQueue.map(rh => rh.type).indexOf(requestType);
-        if (requestHandlerIndex !== -1) {
-            const requestHandler = requestHandlersQueue[requestHandlerIndex].onRequest;
+        requestHandlersQueue.filter(rh => rh.type === requestType).forEach(handlerContainer => {
+            const requestHandler = handlerContainer.onRequest;
             const resultArgs = requestHandler(request.args)
             sendResponse(request.id, resultArgs);
-        }
+        });
     });
 
     const sendResponse = (requestId, resultArgs) => {
