@@ -16,9 +16,11 @@ function TabSeparatedInputStreamParser() {
                 throw new Error(`Invalid incoming JSON: ${messageStr}`);
             }
             if (message.type === 'RESPONSE') {
-                messageEmitter.emit('response', message.response);
+                messageEmitter.emit('response',message.response);
             }else if (message.type === 'REQUEST') {
                 messageEmitter.emit('request', message.request);
+            }else if (message.type === 'ERROR'){
+                messageEmitter.emit('error', message)
             }
         }
     };
@@ -26,6 +28,11 @@ function TabSeparatedInputStreamParser() {
     this.onResponse = handleResponseCallback => {
         messageEmitter.on('response', handleResponseCallback);
     };
+
+    this.onError = handleErrorCallback => {
+        messageEmitter.on('error', handleErrorCallback);
+    };
+
 
     this.onRequest = handleRequestCallback => {
         messageEmitter.on('request', handleRequestCallback);

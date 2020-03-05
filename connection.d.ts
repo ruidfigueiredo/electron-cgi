@@ -8,7 +8,7 @@ export = class Connection {
      * @param args Argument to be sent to the connected process request handler 
      * @param onResponse Optional callback that will be invoked after the request has been executed on the connected process 
      */
-    send(type: string, args: any, onResponse?: (returnArg: any) => void): void;
+    send(type: string, args: any, onResponse?: (returnArg: any) => void): void | Promise<any>;
     /**
      * Closes the connection
      */
