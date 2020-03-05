@@ -1,5 +1,28 @@
 # Electron CGI
 
+## Update version 1.0.0
+
+- Alignment of the API for making requests with Node.js conventions (this is a **breaking change**)
+
+    connection.send('requestId', args, (error, response) => {...})
+
+- Ability to use promises. If no callback is provided `send` returns a promise:
+
+        try{
+            const result = await connection.send('request', args);
+            //use result
+        }catch(error) {
+            //handle error
+        }
+
+- Errors propagate from .NET to Node.js (requires electron-cgi-dotnet version 1.0.0)
+
+    - If an exception is thrown in a handler in .NET it will be serialized and sent to Node.js.
+
+- Arguments are now optional in `connection.send` (e.g. this is valid: `connection.send('start')`)
+
+- Bugfixes
+
 ## Update version 0.0.5
 
 - Duplex: ability to send requests from both .Net and Node.js
