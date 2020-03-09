@@ -64,6 +64,10 @@ function Connection(outStream, inStream) {
     this.onDisconnect = null;
 
     this.send = (type, args = {}, onResponse = null) => {
+        if (typeof args === 'function' && onResponse === null){ //if there's only one argument and it's a function assume it's the callback
+            onResponse = args;
+            args = {}
+        }
         if (onResponse === null) {
             return new Promise((resolve, reject) => {
                 sendRequest(new Request(type, args), (err, result) => {

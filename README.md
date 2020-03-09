@@ -15,7 +15,7 @@
             //handle error
         }
 
-- Errors propagate from .NET to Node.js (requires electron-cgi-dotnet version 1.0.0)
+- Errors propagate from .NET to Node.js (requires NuGet package ElectronCgi.DotNet version 1.0.1)
 
     - If an exception is thrown in a handler in .NET it will be serialized and sent to Node.js.
 
