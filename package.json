@@ -1,6 +1,6 @@
 {
   "name": "electron-cgi",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Library to connect node applications to other apps using the stdin/stdout much like what was done in the 90s with CGI (common gateway interface)",
   "main": "index.js",
   "typings": "index.d.ts",
