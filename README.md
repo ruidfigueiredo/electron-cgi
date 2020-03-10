@@ -1,5 +1,13 @@
 # Electron CGI
 
+## Update version 1.0.2
+
+- Fix for incorrect typescript definition file for connection (callbacks were missing the error parameter)
+
+## Update version 1.0.1
+
+- Added ability to omit parameters in `.send`, for example `connection.send('getAlll', (err, allResults) => {...})`
+
 ## Update version 1.0.0
 
 - Alignment of the API for making requests with Node.js conventions (this is a **breaking change**)
