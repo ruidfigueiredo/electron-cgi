@@ -11,4 +11,14 @@ export class ConnectionBuilder {
      * Starts a new process and takes over its stdin and stdout. Returns a Connection object that can be used to communicate with the new process 
      */
     build(): Connection;
+
+    /**
+     * Available to override and manage onExit by your own implementation
+     */ 
+    onExited: (code: any) => void;
+   
+    /**
+     * Available to override and manage errors by your own implementation 
+     */
+    onError: (data: any) => void; 
 }
