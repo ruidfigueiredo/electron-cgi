@@ -1,4 +1,4 @@
-import { Connection } from ('./connection')
+import { Connection } from './connection'
 export class ConnectionBuilder {
     /**
      * Configures the connection builder with the command and arguments supplied as parameters
