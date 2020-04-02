@@ -2,7 +2,7 @@ const Request = require('./request');
 const TabSeparatedInputStreamParser = require('./tab-separated-input-stream-parser');
 
 /** @param {import('stream').Writable} outStream */
-function Connection(outStream, inStream) {
+exports.Connection = function Connection(outStream, inStream) {
     const responseHandlersQueue = [];
     const requestHandlersQueue = [];
 
@@ -90,5 +90,3 @@ function Connection(outStream, inStream) {
         outStream.end();
     };
 }
-
-module.exports = Connection;

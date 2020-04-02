@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
-const Connection = require('./connection');
+const { Connection } = require('./connection');
 
-function ConnectionBuilder() {
+exports.ConnectionBuilder = function ConnectionBuilder() {
     var spawnArguments = null;
     this.connectTo = (command, ...args) => {
         spawnArguments = {
@@ -36,9 +36,10 @@ function ConnectionBuilder() {
         });
         return new Connection(executable.stdin, executable.stdout);
     };
- 
+  
+    exports.ConnectionBuilder = ConnectionBuilder;
+  
     this.onError = null;
     this.onExited = null;
+  
 }
-
-exports.ConnectionBuilder = ConnectionBuilder;

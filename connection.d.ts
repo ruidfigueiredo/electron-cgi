@@ -1,6 +1,6 @@
 import { Writable, Readable } from "stream";
 
-export = class Connection {    
+export class Connection {    
     constructor(executabeStdin: Writable, executabeStdout: Readable);
     /**
      * Sends a request to the connected process
