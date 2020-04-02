@@ -13,12 +13,14 @@ export class ConnectionBuilder {
     build(): Connection;
 
     /**
-     * Available to override and manage onExit by your own implementation
+     * Allows adding a callback that runs when the connected process exits
+     * @param onExitHandler invoked with the exit code
      */ 
-    onExited: (code: any) => void;
+    onExit: (onExitHandler: (code: number) => void) => ConnectionBuilder;
    
     /**
-     * Available to redirect what it's on the stderr without any treatment 
+     * Allows adding a callback that runs when the connected process writes to the sterr stream
+     * @param onStderrHandler invoked with what's on the sterr stream
      */
-    onStderr: (data: any) => void; 
+    onStderr: (onStderrHandler: (error: string) => void) => ConnectionBuilder; 
 }

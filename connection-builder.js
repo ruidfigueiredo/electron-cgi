@@ -20,15 +20,15 @@ exports.ConnectionBuilder = function ConnectionBuilder() {
             throw new Error(`Could not start ${spawnArguments.command}. Are you sure you have the right path?`);
  
         executable.on('exit', (code) => {
-            if(this.onExited){
-                this.onExited(code);
+            if(this.handleOnExit){
+                this.handleOnExit(code);
             }
             console.log(`Connection to ${spawnArguments.command} was terminated (code: ${code})`)
         });
         executable.stderr.on('data', data => {
-            if(this.onStderr)
+            if(this.handleOnStderr)
             {
-                this.onStderr(data);
+                this.handleOnStderr(data);
             }
             process.stdout.write('\x1b[7m'); //invert terminal colors
             process.stdout.write(data);
@@ -36,10 +36,15 @@ exports.ConnectionBuilder = function ConnectionBuilder() {
         });
         return new Connection(executable.stdin, executable.stdout);
     };
-  
-    exports.ConnectionBuilder = ConnectionBuilder;
-  
-    this.onStderr = null;
-    this.onExited = null;
-  
+        
+    this.handleOnStderr = null;
+    this.handleOnExit = null;
+    this.onStderr = function(handler) {
+        this.handleOnStderr = handler
+        return this;
+    }
+    this.onExit = function (handler) {
+        this.handleOnExit = handler;
+        return this;
+    }         
 }
