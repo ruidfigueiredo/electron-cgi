@@ -26,9 +26,9 @@ exports.ConnectionBuilder = function ConnectionBuilder() {
             console.log(`Connection to ${spawnArguments.command} was terminated (code: ${code})`)
         });
         executable.stderr.on('data', data => {
-            if(this.onError)
+            if(this.onStderr)
             {
-                this.onError(data);
+                this.onStderr(data);
             }
             process.stdout.write('\x1b[7m'); //invert terminal colors
             process.stdout.write(data);
@@ -39,7 +39,7 @@ exports.ConnectionBuilder = function ConnectionBuilder() {
   
     exports.ConnectionBuilder = ConnectionBuilder;
   
-    this.onError = null;
+    this.onStderr = null;
     this.onExited = null;
   
 }

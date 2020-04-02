@@ -18,7 +18,7 @@ export class ConnectionBuilder {
     onExited: (code: any) => void;
    
     /**
-     * Available to override and manage errors by your own implementation 
+     * Available to redirect what it's on the stderr without any treatment 
      */
-    onError: (data: any) => void; 
+    onStderr: (data: any) => void; 
 }
