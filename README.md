@@ -77,7 +77,7 @@ In NodeJs/Electron:
         console.log('Lost connection to the .Net process');
     };
     
-    connection.send('greeting', 'John', theGreeting => {
+    connection.send('greeting', 'John', (error, theGreeting) => {
         console.log(theGreeting); // will print "Hello John!"
     });
 
