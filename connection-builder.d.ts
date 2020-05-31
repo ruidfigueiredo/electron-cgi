@@ -20,7 +20,7 @@ export class ConnectionBuilder {
    
     /**
      * Allows adding a callback that runs when the connected process writes to the sterr stream
-     * @param onStderrHandler invoked with what's on the sterr stream
+     * @param onStderrHandler invoked with what's on the sterr stream (untreated, this means this callback might be invoked with only a portion of what was written, several times)
      */
     onStderr: (onStderrHandler: (error: string) => void) => ConnectionBuilder; 
 }
