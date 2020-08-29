@@ -17,7 +17,7 @@ In NodeJs/Electron:
     connection.onDisconnect = () => {
         console.log('Lost connection to the .Net process');
     };
-    
+
     connection.send('greeting', 'John', (error, theGreeting) => {
         if (error) {
             console.log(error); //serialized exception from the .NET handler
@@ -36,7 +36,6 @@ In NodeJs/Electron:
     }
 
     connection.close();
-
 
 And in the .Net Console Application:
 
@@ -59,17 +58,19 @@ And in the .Net Console Application:
         connection.Listen();
     }
 
-
 ### How does it work?
 
-Electron CGI establishes a "connection" with an external process. That external process must be configured to accept that connection. In the example above that's what the `Listen` method does.  
+Electron CGI establishes a "connection" with an external process. That external process must be configured to accept that connection. In the example above that's what the `Listen` method does.
 
 In Node we can "send" requests (for example "greeting" with "John" as a parameter) and receive a response from the other process.
 
 The way this communication channel is established is by using the connected process' stdin and stdout streams. This approach does not rely on starting up a web server and because of that introduces very little overhead in terms of the requests' round-trip time.
 
-
 ## Changelog
+
+## Update version 1.0.6
+
+- Fix for falsy return values from request handlers on node being sent as null to .NET
 
 ## Update version 1.0.3..1.0.5
 
@@ -89,7 +90,7 @@ The way this communication channel is established is by using the connected proc
 
 - Alignment of the API for making requests with Node.js conventions (this is a **breaking change**)
 
-    connection.send('requestId', args, (error, response) => {...})
+  connection.send('requestId', args, (error, response) => {...})
 
 - Ability to use promises. If no callback is provided `send` returns a promise:
 
@@ -102,7 +103,7 @@ The way this communication channel is established is by using the connected proc
 
 - Errors propagate from .NET to Node.js (requires NuGet package ElectronCgi.DotNet version 1.0.1)
 
-    - If an exception is thrown in a handler in .NET it will be serialized and sent to Node.js.
+  - If an exception is thrown in a handler in .NET it will be serialized and sent to Node.js.
 
 - Arguments are now optional in `connection.send` (e.g. this is valid: `connection.send('start')`)
 
@@ -114,7 +115,7 @@ The way this communication channel is established is by using the connected proc
 
 ## Update version 0.0.3 and 0.0.4
 
-- (.Net) Ability to serve request concurrently (uses System.Threading.Tasks.DataFlow) 
+- (.Net) Ability to serve request concurrently (uses System.Threading.Tasks.DataFlow)
 - Intellisense for electron-cgi
 - .Net stderr stream is displayed in node's console (Console.Error.WriteLine in .Net is now visible)
 - Fixed logging in ElectronCgi.DotNet

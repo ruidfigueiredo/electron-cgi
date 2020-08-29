@@ -46,7 +46,7 @@ exports.Connection = function Connection(outStream, inStream) {
         if (!outStream.writable) return; //stream was closed    
         outStream.write(`{"type": "RESPONSE", "response": ${JSON.stringify({
             id: requestId,
-            result: JSON.stringify(resultArgs || null)
+            result: JSON.stringify(resultArgs === undefined ? null : resultArgs)
         })}}\t`);
     }
 
@@ -64,7 +64,7 @@ exports.Connection = function Connection(outStream, inStream) {
     this.onDisconnect = null;
 
     this.send = (type, args = {}, onResponse = null) => {
-        if (typeof args === 'function' && onResponse === null){ //if there's only one argument and it's a function assume it's the callback
+        if (typeof args === 'function' && onResponse === null) { //if there's only one argument and it's a function assume it's the callback
             onResponse = args;
             args = {}
         }
@@ -75,7 +75,7 @@ exports.Connection = function Connection(outStream, inStream) {
                         reject(err)
                     else
                         resolve(result)
-                });    
+                });
             });
         } else {
             sendRequest(new Request(type, args), onResponse);
