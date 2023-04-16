@@ -7,7 +7,9 @@ function TabSeparatedInputStreamParser() {
     this.addPartial = streamContent => {        
         streamInput += streamContent;
         while (streamInput.indexOf('\t') !== -1) {
-            const messageStr = streamInput.substring(0, streamInput.indexOf('\t'));
+            let messageStr = streamInput.substring(0, streamInput.indexOf('\t'));
+            // remove invisible characters
+            messageStr = messageStr.replace(/[\u0000-\u001F\u007F-\u009F]/g, "")
             streamInput = streamInput.substring(streamInput.indexOf('\t') + 1);
             let message = null;
             try {
