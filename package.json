@@ -13,7 +13,7 @@
   "author": "Rui Figueiredo <rui@blinkingcaret.com> (https://www.blinkingcaret.com)",
   "license": "MIT",
   "dependencies": {
-    "uuid": "^3.3.2"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@types/jasmine": "^3.3.9",
